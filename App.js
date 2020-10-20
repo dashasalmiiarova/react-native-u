@@ -1,13 +1,24 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+import LabScreen from './components/LabScreen';
+import DokScreen from './components/DokScreen';
+import StartScreen from './components/StartScreen';
+
+const Stack = createStackNavigator()
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Ekran początkowy">
+        <Stack.Screen name="Ekran początkowy" component={StartScreen} />
+        <Stack.Screen name="Laboratorium" component={LabScreen} />
+        <Stack.Screen name="Doktorze" component={DokScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 

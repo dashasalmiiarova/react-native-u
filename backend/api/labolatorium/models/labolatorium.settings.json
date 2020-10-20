@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "labolatoriums",
+  "info": {
+    "name": "Labolatorium"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "date": {
+      "type": "date"
+    },
+    "gender": {
+      "type": "richtext"
+    },
+    "speed": {
+      "type": "boolean"
+    },
+    "age": {
+      "type": "integer"
+    },
+    "department": {
+      "type": "richtext"
+    },
+    "people_counter": {
+      "type": "biginteger"
+    }
+  }
+}

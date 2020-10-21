@@ -1,16 +1,16 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput, KeyboardAvoidingView } from 'react-native';
-import { AppLoading } from 'expo';
+import { StyleSheet, Text, TextInput, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, View } from 'react-native';
 import * as Font from 'expo-font';
 import Constants from 'expo-constants';
 import DatePicker from 'react-native-datepicker';
-import CheckBox from '@react-native-community/checkbox';
 import ButtonMain from './ButtonMain';
+import Spinner from './Spinner';
 
+import CheckBox from './CheckBox';
 // import DateTimePicker from '@react-native-community/datetimepicker';
 
 let customFonts = {
-    'Avenir_Black': require('../assets/fonts/Avenir/Avenir-Black-03.ttf'),
+    'Avenir_Medium': require('../assets/fonts/Avenir/Avenir-Medium-09.ttf'),
     'Avenir_Book': require('../assets/fonts/Avenir/Avenir-Book-01.ttf'),
 }
 
@@ -18,6 +18,7 @@ export default class LabScreen extends React.Component {
     state={
         fontsLoaded: false,
         date: new Date(),
+        speed: false,
     };
     async _loadFontsAsync(){
         await Font.loadAsync(customFonts);
@@ -30,14 +31,16 @@ export default class LabScreen extends React.Component {
         console.log(this.state.date);
         if(this.state.fontsLoaded){
             return (
-                <KeyboardAvoidingView style={styles.container}>
+                <KeyboardAvoidingView behavior="padding" style={styles.container} ref="scroller" keyboardShouldPersistTaps={true} >
+                    <TouchableWithoutFeedback onPress={ Keyboard.dismiss }>
+                    <View style={styles.inner}>
                     <Text style={styles.mainText}>Wypełni formularz</Text>
                     <DatePicker
-                        style={{width: 200}}
+                        style={{width: '80%', margin: 20}}
                         date={this.state.date}
                         mode="date"
                         placeholder="select date"
-                        format="YYYY-MM-DD"
+                        format="DD-MM-YYYY"
                         minDate="2019-05-01"
                         maxDate={new Date()}
                         confirmBtnText="Potwierdź"
@@ -56,13 +59,21 @@ export default class LabScreen extends React.Component {
                         }}
                         onDateChange={(date) => {this.setState({date: date})}}
                     />
-                    <TextInput style={styles.input} placeholder='Wiek' keyboardType='numeric' />
-                    <TextInput style={styles.input} placeholder='Oddział szpitalu z którego było skierowanie' keyboardType='text' />
-                    <ButtonMain title="Wyśli" onPress={() => navigation.navigate('Doktorze')  } />
+                    <TextInput style={styles.input} placeholder='Wiek' keyboardType='numeric' placeholderTextColor="#43425D" />
+                    <TextInput style={styles.input} placeholder='Plec' keyboardType='text' placeholderTextColor="#43425D" />       
+                    <TextInput style={styles.input} placeholder='Oddział szpitalu z którego było skierowanie' keyboardType='text' placeholderTextColor="#43425D" />
+                    <CheckBox 
+                        selected={this.state.speed} 
+                        onPress={() => { this.setState({ speed: !this.state.speed })}}
+                        text='Czy to było szybkie badanie?'
+                    />  
+                    <ButtonMain style={styles.buttonSubmit} title="Wyśli" onPress={() => navigation.navigate('Doktorze')  } />
+                    </View>
+                    </TouchableWithoutFeedback>
                 </KeyboardAvoidingView>  
             );
         } else{
-            return <AppLoading />
+            return <Spinner />
         }
     }
 }
@@ -71,13 +82,26 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#F0FAF8',
-        paddingTop: Constants.statusBarHeight
+    },
+    inner: {
+        paddingTop: Constants.statusBarHeight,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },  
+    mainText: {
+        fontFamily: 'Avenir_Medium',
+        fontSize: 25,
     },
     input: {
-        margin: 10,
-        padding: 5,
+        margin: 20,
+        padding: 7,
         marginTop: 10,
-        borderColor: 'black',
-        borderWidth: 1,
+        width: '80%',
+        borderBottomColor: '#646D82',
+        borderBottomWidth: 1,
+    },
+    buttonSubmit: {
+        width: '80%',
     }
 })

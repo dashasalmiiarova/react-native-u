@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Button, StyleSheet, TouchableOpacity, Text } from "react-native";
-import { AppLoading } from 'expo';
 import { useFonts } from 'expo-font';
+import Spinner from './Spinner';
 
 const ButtonMain = ({ onPress, title }) => {
     let [fontsLoaded] = useFonts({
@@ -10,7 +10,7 @@ const ButtonMain = ({ onPress, title }) => {
       });
     
       if (!fontsLoaded) {
-        return <AppLoading />;
+        return <Spinner  />;
       } else {
         return (
             <TouchableOpacity onPress={onPress} style={styles.appButtonContainer}>

@@ -10,16 +10,23 @@ import StartScreen from './components/StartScreen';
 
 const Stack = createStackNavigator()
 
-export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Ekran początkowy">
-        <Stack.Screen name="Ekran początkowy" component={StartScreen} />
-        <Stack.Screen name="Laboratorium" component={LabScreen} />
-        <Stack.Screen name="Doktorze" component={DokScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+
+// LogBox.ignoreWarnings([
+//   'Animated: `useNativeDriver` was not specified.',
+// ]);
+export default class App extends React.Component {
+  render(){
+    return (
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Ekran początkowy">
+          <Stack.Screen name="Ekran początkowy" component={StartScreen} />
+          <Stack.Screen name="Laboratorium" component={LabScreen} />
+          <Stack.Screen name="Doktorze" component={DokScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    )
+  }
+  
 }
 
 const styles = StyleSheet.create({

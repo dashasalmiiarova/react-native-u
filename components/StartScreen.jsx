@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
-import { AppLoading } from 'expo';
+import Spinner from './Spinner';
 import { useFonts } from 'expo-font';
 
 import ButtonMain from './ButtonMain';
@@ -12,7 +12,7 @@ const StartScreen = ({ navigation }) => {
   });
 
   if (!fontsLoaded) {
-    return <AppLoading />;
+    return <Spinner />;
   } else {
     return (
         <View style={styles.container}>

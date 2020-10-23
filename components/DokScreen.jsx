@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, ScrollView, View } from 'react-native';
+import { StyleSheet, Text, TextInput, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, ScrollView, View, Animated } from 'react-native';
 import * as Font from 'expo-font';
 import Constants from 'expo-constants';
 import DatePicker from 'react-native-datepicker';
@@ -8,7 +8,7 @@ import CheckBox from './CheckBox';
 
 import Spinner from './Spinner';
 import {Picker} from '@react-native-community/picker';
-
+import { LogBox } from 'react-native';
 
 let customFonts = {
     'Avenir_Medium': require('../assets/fonts/Avenir/Avenir-Medium-09.ttf'),
@@ -19,6 +19,12 @@ export default class DokScreen extends React.Component {
     state={
         fontsLoaded: false,
         date: new Date(),
+        age: 0,
+        plec: '',
+        place: '',
+        hospital: false,
+        badanie: false,
+        diagnoz: '',
         first: false,
         spotkanie: 'Stacjonarie',
     };
@@ -28,76 +34,89 @@ export default class DokScreen extends React.Component {
     }
     componentDidMount(){
         this._loadFontsAsync();
+        LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
     }
+    getHandler = key => val => {
+        this.setState({ [key]: val })
+    }
+
     render(){
-        console.log(this.state.date);
         if(this.state.fontsLoaded){
             return (
                 <KeyboardAvoidingView behavior="padding" style={styles.container} ref="scroller" keyboardShouldPersistTaps={true} >
                     <TouchableWithoutFeedback onPress={ Keyboard.dismiss }>
-                        <ScrollView style={styles.scrollView} >
+                        <Animated.ScrollView
+                            scrollEventThrottle={1}
+                            onScroll={Animated.event(
+                                [{ nativeEvent: { contentOffset: { y: this.state.animatedValue } } }],
+                                { useNativeDriver: true }
+                            )} 
+                            style={styles.scrollView} >
                             <View style={styles.contentContainer}>
-                            <Text style={styles.mainText}>Wypełni formularz</Text>
-                            <DatePicker
-                                style={{width: '80%', margin: 20}}
-                                date={this.state.date}
-                                mode="date"
-                                placeholder="select date"
-                                format="DD-MM-YYYY"
-                                minDate="2019-05-01"
-                                maxDate={new Date()}
-                                confirmBtnText="Potwierdź"
-                                cancelBtnText="Anuluj"
-                                customStyles={{
-                                    dateIcon: {
-                                        position: 'absolute',
-                                        left: 0,
-                                        top: 4,
-                                        marginLeft: 0
-                                    },
-                                    dateInput: {
-                                        marginLeft: 36
-                                    }
-                                }}
-                                onDateChange={(date) => {this.setState({date: date})}}
-                            />
-                            
-                            <TextInput style={styles.input} placeholder='Wiek' keyboardType='numeric' placeholderTextColor="#43425D" />
-                            <TextInput style={styles.input} placeholder='Plec' keyboardType='default' placeholderTextColor="#43425D" />       
-                            <TextInput style={styles.input} placeholder='Skąd pacjent?' keyboardType='default' placeholderTextColor="#43425D" />       
-                            <CheckBox 
-                                selected={this.state.first} 
-                                onPress={() => { this.setState({ speed: !this.state.first })}}
-                                text='Sierowano na hospitalizację?'
-                            /> 
-                            <CheckBox 
-                                selected={this.state.first} 
-                                onPress={() => { this.setState({ speed: !this.state.first })}}
-                                text='Skierowano na badanie?'
-                            /> 
-                            <TextInput style={styles.input} placeholder='Jakie badanie?' keyboardType='default' placeholderTextColor="#43425D" />       
-                            <TextInput style={styles.input} placeholder='Diagnoz' keyboardType='default' placeholderTextColor="#43425D" />       
-                            <CheckBox 
-                                selected={this.state.first} 
-                                onPress={() => { this.setState({ speed: !this.state.first })}}
-                                text='Czy to pierwsze spotkanie?'
-                            />  
-                            <Picker
-                                selectedValue={this.state.spotkanie}
-                                style={{ width: '80%', marginTop: -20}}
-                                mode='dropdown'
-                                onValueChange={(itemValue) =>
-                                    this.setState({spotkanie: itemValue})
-                                }>
-                                <Picker.Item label="Stacjonarnie" value="Stacjonarnie" />
-                                <Picker.Item label="Telefonicznie" value="Telefonicznie" />
-                                <Picker.Item label="Zdalnie" value="Zdalnie" />
-                            </Picker>
-                            <View style={ styles.buttonSubmitView }>
-                                <ButtonMain style={styles.buttonSubmit} title="Wyśli" onPress={() => navigation.navigate('Doktorze')  } />
+                                <Text style={styles.mainText}>Wypełni formularz</Text>
+                                <DatePicker                                
+                                    style={{width: '80%', margin: 20}}
+                                    date={this.state.date}
+                                    mode="date"
+                                    placeholder="select date"
+                                    format="DD-MM-YYYY"
+                                    minDate="2019-05-01"
+                                    maxDate={new Date()}
+                                    duration={600}
+                                    confirmBtnText="Potwierdź"
+                                    cancelBtnText="Anuluj"
+                                    customStyles={{
+                                        dateIcon: {
+                                            position: 'absolute',
+                                            left: 0,
+                                            top: 4,
+                                            marginLeft: 0
+                                        },
+                                        dateInput: {
+                                            marginLeft: 36
+                                        }
+                                    }}
+                                    onDateChange={(date) => {this.setState({ date: 'date' })}}
+                                />
+                                
+                                <TextInput style={styles.input} placeholder='Wiek' value={this.state.age} onChangeText={ this.getHandler('age') } keyboardType='numeric' placeholderTextColor="#43425D" />
+                                <TextInput style={styles.input} placeholder='Plec' value={this.state.plec} onChangeText={ this.getHandler('plec') } keyboardType='default' placeholderTextColor="#43425D" />       
+                                <TextInput style={styles.input} placeholder='Skąd pacjent(miasto, wieś)?' value={this.state.place} onChangeText={ this.getHandler('place') } keyboardType='default' placeholderTextColor="#43425D" />       
+                                <CheckBox 
+                                    selected={this.state.hospital} 
+                                    onPress={() => { this.setState({ hospital: !this.state.hospital })}}
+                                    text='Sierowano na hospitalizację?'
+                                /> 
+                                <CheckBox 
+                                    selected={this.state.badanie} 
+                                    onPress={() => { this.setState({ badanie: !this.state.badanie })}}
+                                    text='Skierowano na badanie?       '
+                                    /> 
+                                {
+                                    this.state.badanie ? <TextInput style={styles.input} placeholder='Jakie badanie?' keyboardType='default' placeholderTextColor="#43425D" />   : null    
+                                }
+                                <TextInput style={styles.input} placeholder='Diagnoz' keyboardType='default' placeholderTextColor="#43425D" />       
+                                <CheckBox 
+                                    selected={this.state.first} 
+                                    onPress={() => { this.setState({ first: !this.state.first })}}
+                                    text='Czy to pierwsze spotkanie?'
+                                />  
+                                <Picker
+                                    selectedValue={this.state.spotkanie}
+                                    style={{ width: '80%', marginTop: -20}}
+                                    mode='dropdown'
+                                    onValueChange={(itemValue) =>
+                                        this.setState({spotkanie: itemValue})
+                                    }>
+                                    <Picker.Item label="Stacjonarnie" value="Stacjonarnie" />
+                                    <Picker.Item label="Telefonicznie" value="Telefonicznie" />
+                                    <Picker.Item label="Zdalnie" value="Zdalnie" />
+                                </Picker>
+                                <View style={ styles.buttonSubmitView }>
+                                    <ButtonMain style={styles.buttonSubmit} title="Wyśli" onPress={() => navigation.navigate('Doktorze')  } />
+                                </View>
                             </View>
-                            </View>
-                        </ScrollView>
+                        </Animated.ScrollView>
                     </TouchableWithoutFeedback>
                 </KeyboardAvoidingView>  
             );

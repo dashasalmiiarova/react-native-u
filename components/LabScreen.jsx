@@ -28,7 +28,6 @@ export default class LabScreen extends React.Component {
         this._loadFontsAsync();
     }
     render(){
-        console.log(this.state.date);
         if(this.state.fontsLoaded){
             return (
                 <KeyboardAvoidingView behavior="padding" style={styles.container} ref="scroller" keyboardShouldPersistTaps={true} >
@@ -60,8 +59,8 @@ export default class LabScreen extends React.Component {
                         onDateChange={(date) => {this.setState({date: date})}}
                     />
                     <TextInput style={styles.input} placeholder='Wiek' keyboardType='numeric' placeholderTextColor="#43425D" />
-                    <TextInput style={styles.input} placeholder='Plec' keyboardType='text' placeholderTextColor="#43425D" />       
-                    <TextInput style={styles.input} placeholder='Oddział szpitalu z którego było skierowanie' keyboardType='text' placeholderTextColor="#43425D" />
+                    <TextInput style={styles.input} placeholder='Plec' keyboardType='default' placeholderTextColor="#43425D" />       
+                    <TextInput style={styles.input} placeholder='Oddział szpitalu z którego było skierowanie' keyboardType='default' placeholderTextColor="#43425D" />
                     <CheckBox 
                         selected={this.state.speed} 
                         onPress={() => { this.setState({ speed: !this.state.speed })}}

@@ -1,5 +1,5 @@
+import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import 'localstorage-polyfill'; 
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -12,19 +12,10 @@ import SignIn from './components/SignIn';
 
 const Stack = createStackNavigator()
 
-export default class App extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      authUser: JSON.parse(localStorage.getItem('authUser')),
-    };
-  }
-  componentDidMount(){
-    auth().onAuthStateChanged(authUser => {
-      authUser
-        ? global.localStorage.setItem('authUser', JSON.stringify(authUser))
-        : global.localStorage.removeItem('authUser')
-    });
+export default class Main extends React.Component {
+
+  componentWillUnmount() {
+    this.listener();
   }
   render(){
     console.log('new');
@@ -42,11 +33,3 @@ export default class App extends React.Component {
   
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

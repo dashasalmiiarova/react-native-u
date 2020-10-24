@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TextInput, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, View } from 'react-native';
 import { signin, signup } from '../auth';
-
+import { auth } from '../firebase';
 import * as Font from 'expo-font';
 import Constants from 'expo-constants';
 import ButtonMain from './ButtonMain';
@@ -19,6 +19,7 @@ export default class SignIn extends React.Component{
         email: '',
         password: '',
         error: null,
+        userData: { }
     }
     async _loadFontsAsync(){
         await Font.loadAsync(customFonts);
@@ -35,7 +36,8 @@ export default class SignIn extends React.Component{
         this.setState({ error: '' });
         try{
             await signin(this.state.email, this.state.password);
-            this.props.navigation.navigate("Ekran początkowy");
+            localStorage.setItem( auth().currentUser)
+            this.props.navigation.replace("Ekran początkowy");
         } catch(error) {
             this.setState({ error: error.message });
         }
@@ -45,6 +47,7 @@ export default class SignIn extends React.Component{
         this.setState({ error: '' });
         try{
             await signup(this.state.email, this.state.password);
+            this.props.navigation.replace("Ekran początkowy");
         } catch(error) {
             this.setState({ error: error.message });
         }

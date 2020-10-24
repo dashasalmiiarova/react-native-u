@@ -10,6 +10,7 @@ import DokScreen from './components/DokScreen';
 import StartScreen from './components/StartScreen';
 import SignIn from './components/SignIn';
 
+
 const Stack = createStackNavigator()
 
 export default class App extends React.Component {
@@ -19,20 +20,20 @@ export default class App extends React.Component {
       authUser: JSON.parse(localStorage.getItem('authUser')),
     };
   }
-  componentDidMount(){
-    auth().onAuthStateChanged(authUser => {
-      authUser
-        ? global.localStorage.setItem('authUser', JSON.stringify(authUser))
-        : global.localStorage.removeItem('authUser')
-    });
-  }
+  // componentDidUpdate(){
+  //   auth().onAuthStateChanged(authUser => {
+  //     authUser
+  //       ? global.localStorage.setItem('authUser', JSON.stringify(authUser))
+  //       : global.localStorage.removeItem('authUser')
+  //   });
+  // }
+  
   render(){
-    console.log('new');
     return (
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Ekran logowanie">
-          <Stack.Screen name="Ekran początkowy" component={StartScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Ekran logowanie" component={SignIn} />
+          <Stack.Screen name="Ekran początkowy" component={StartScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Laboratorium" component={LabScreen} />
           <Stack.Screen name="Doktorze" component={DokScreen} />
         </Stack.Navigator>
@@ -41,12 +42,3 @@ export default class App extends React.Component {
   }
   
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

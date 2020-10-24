@@ -2,10 +2,9 @@ import React from 'react';
 import { StyleSheet, Text, TextInput, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, View } from 'react-native';
 import * as Font from 'expo-font';
 import Constants from 'expo-constants';
-import DatePicker from 'react-native-datepicker';
 import ButtonMain from './ButtonMain';
 import Spinner from './Spinner';
-
+import { DatePicker } from 'native-base';
 import CheckBox from './CheckBox';
 // import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -35,28 +34,19 @@ export default class LabScreen extends React.Component {
                     <View style={styles.inner}>
                     <Text style={styles.mainText}>Wypełni formularz</Text>
                     <DatePicker
-                        style={{width: '80%', margin: 20}}
-                        date={this.state.date}
-                        mode="date"
-                        placeholder="select date"
-                        format="DD-MM-YYYY"
-                        minDate="2019-05-01"
-                        maxDate={new Date()}
-                        confirmBtnText="Potwierdź"
-                        cancelBtnText="Anuluj"
-                        customStyles={{
-                        dateIcon: {
-                            position: 'absolute',
-                            left: 0,
-                            top: 4,
-                            marginLeft: 0
-                        },
-                        dateInput: {
-                            marginLeft: 36
-                        }
-                        // ... You can check the source to find the other keys.
-                        }}
-                        onDateChange={(date) => {this.setState({date: date})}}
+                        defaultDate={ this.state.date }
+                        minimumDate={new Date(2020, 1, 1)}
+                        maximumDate={new Date()}
+                        locale={"pl"}
+                        timeZoneOffsetInMinutes={undefined}
+                        modalTransparent={false}
+                        animationType={"fade"}
+                        androidMode={"default"}
+                        // placeHolderText="Wybierz datę"
+                        textStyle={{ color: "#2CD889" }}
+                        placeHolderTextStyle={{ color: "#2CD889" }}
+                        onDateChange={(date) => { this.setState({ date: date }) }}
+                        disabled={false}
                     />
                     <TextInput style={styles.input} placeholder='Wiek' keyboardType='numeric' placeholderTextColor="#43425D" />
                     <TextInput style={styles.input} placeholder='Plec' keyboardType='default' placeholderTextColor="#43425D" />       

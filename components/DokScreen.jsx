@@ -2,13 +2,15 @@ import React from 'react';
 import { StyleSheet, Text, TextInput, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, ScrollView, View, Animated } from 'react-native';
 import * as Font from 'expo-font';
 import Constants from 'expo-constants';
-import DatePicker from 'react-native-datepicker';
+import { DatePicker } from 'native-base';
 import ButtonMain from './ButtonMain';
 import CheckBox from './CheckBox';
 
 import Spinner from './Spinner';
 import {Picker} from '@react-native-community/picker';
 import { LogBox } from 'react-native';
+
+import { db, auth } from '../firebase';
 
 let customFonts = {
     'Avenir_Medium': require('../assets/fonts/Avenir/Avenir-Medium-09.ttf'),
@@ -36,8 +38,21 @@ export default class DokScreen extends React.Component {
         this._loadFontsAsync();
         LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
     }
+
     getHandler = key => val => {
         this.setState({ [key]: val })
+    }
+
+    createData(){
+        const { contant } = this.state;
+        const data_id = `data-${auth().currentUser.user.uid}`
+        db.ref(`dok/${data_id}`)
+            .set({
+                contant
+            })
+            .then(_ => {
+                //modal
+            });
     }
 
     render(){
@@ -54,29 +69,20 @@ export default class DokScreen extends React.Component {
                             style={styles.scrollView} >
                             <View style={styles.contentContainer}>
                                 <Text style={styles.mainText}>Wypełni formularz</Text>
-                                <DatePicker                                
-                                    style={{width: '80%', margin: 20}}
-                                    date={this.state.date}
-                                    mode="date"
-                                    placeholder="select date"
-                                    format="DD-MM-YYYY"
-                                    minDate="2019-05-01"
-                                    maxDate={new Date()}
-                                    duration={600}
-                                    confirmBtnText="Potwierdź"
-                                    cancelBtnText="Anuluj"
-                                    customStyles={{
-                                        dateIcon: {
-                                            position: 'absolute',
-                                            left: 0,
-                                            top: 4,
-                                            marginLeft: 0
-                                        },
-                                        dateInput: {
-                                            marginLeft: 36
-                                        }
-                                    }}
-                                    onDateChange={(date) => {this.setState({ date: 'date' })}}
+                                <DatePicker
+                                    defaultDate={ this.state.date }
+                                    minimumDate={new Date(2020, 1, 1)}
+                                    maximumDate={new Date()}
+                                    locale={"pl"}
+                                    timeZoneOffsetInMinutes={undefined}
+                                    modalTransparent={false}
+                                    animationType={"fade"}
+                                    androidMode={"default"}
+                                    // placeHolderText="Wybierz datę"
+                                    textStyle={{ color: "#2CD889" }}
+                                    placeHolderTextStyle={{ color: "#2CD889" }}
+                                    onDateChange={(date) => { this.setState({ date: date }) }}
+                                    disabled={false}
                                 />
                                 
                                 <TextInput style={styles.input} placeholder='Wiek' value={this.state.age} onChangeText={ this.getHandler('age') } keyboardType='numeric' placeholderTextColor="#43425D" />

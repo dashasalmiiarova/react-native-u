@@ -3,23 +3,46 @@ import 'localstorage-polyfill';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { auth } from './firebase';
-
+import User from './components/User';
 import LabScreen from './components/LabScreen';
 import DokScreen from './components/DokScreen';
-import StartScreen from './components/StartScreen';
 import SignIn from './components/SignIn';
 
 
 const Stack = createStackNavigator()
 
 export default class App extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      authUser: JSON.parse(localStorage.getItem('authUser')),
-    };
-  }
+  
+  // unsubscribeFromAuth = null;
+
+  // state = { user: {} };
+
+  // componentDidUpdate(){
+  //   auth().onAuthStateChanged(authUser => {
+  //       this.setState({ user: authUser })
+  //     }
+  //   )
+  // }
+
+  // componentDidMount(){
+  //   const { setCurrentUser } = this.props;
+  //   this.unsubscribeFromAuth = auth().onAuthStateChanged(async userAuth => {
+  //     if(userAuth){
+  //       const userRef = await createUserProfileDocument(userAuth);
+  //       userRef.onSnapshot(snapShot => {
+  //         setCurrentUser({
+  //           id: snapShot.id,
+  //           ...snapShot.data()
+  //         });
+  //       });
+  //     } else{
+  //       setCurrentUser(userAuth);
+  //     }
+  //   });
+  // }
+  // componentWillUnmount(){ 
+  //   this.unsubscribeFromAuth();
+  // }
   // componentDidUpdate(){
   //   auth().onAuthStateChanged(authUser => {
   //     authUser
@@ -31,9 +54,9 @@ export default class App extends React.Component {
   render(){
     return (
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Ekran logowanie">
-          <Stack.Screen name="Ekran logowanie" component={SignIn} />
-          <Stack.Screen name="Ekran początkowy" component={StartScreen} options={{ headerShown: false }} />
+        <Stack.Navigator initialRouteName="Ekran logowania" screenOptions={{ headerBackTitle: 'Wstecz' }} >
+          <Stack.Screen name="Ekran logowania" component={SignIn} />
+          <Stack.Screen name="Ekran początkowy" component={ User } options={{ headerShown: false }} />
           <Stack.Screen name="Laboratorium" component={LabScreen} />
           <Stack.Screen name="Doktorze" component={DokScreen} />
         </Stack.Navigator>

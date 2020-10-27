@@ -6,6 +6,10 @@ import Spinner from './Spinner';
 import { useFonts } from 'expo-font';
 import Constants from 'expo-constants';
 import ButtonMain from './ButtonMain';
+import SignUpButton  from './SignUpButton';
+import { auth } from '../firebase';
+import { logout } from '../auth';
+import firebase from 'firebase';
 
 const UserScreen = () => {
     const navigation = useNavigation();
@@ -14,15 +18,28 @@ const UserScreen = () => {
       'Avenir_Black': require('../assets/fonts/Avenir/Avenir-Black-03.ttf'),
       'Avenir_Book': require('../assets/fonts/Avenir/Avenir-Book-01.ttf'),
     });
+    
+    const signOutUser = async () => {
+      try {
+          await firebase.auth().signOut();
+          // console.log(auth().currentUser.email || 'okay');
+          navigation.replace('Ekran logowania')
+      } catch (e) {
+          console.log(e);
+      }
+  }
+  
+    
     if (!fontsLoaded) {
       return <Spinner />;
     } else {
       return (
           <Container>
             <View style={ { flex: 3, height: screenHeight, justifyContent: 'center', alignItems: 'center', } } >
-              <Text style={styles.mainText}>Wybierz oddział</Text>
+              <Text style={styles.mainText}>Wybierz</Text>
               <ButtonMain title="Laboratorium" onPress={() => navigation.navigate('Laboratorium')  } />
               <ButtonMain title="Doktorze" onPress={() => navigation.navigate('Doktorze')  } />
+              <SignUpButton title="Wyloguj się" onPress={() => { signOutUser() } } />
             </View>
           </Container>
       );

@@ -7,6 +7,7 @@ import Constants from 'expo-constants';
 import ButtonMain from './ButtonMain';
 import Spinner from './Spinner';
 import SignUpButton from './SignUpButton';
+import firebase from 'firebase';
 
 let customFonts = {
     'Avenir_Medium': require('../assets/fonts/Avenir/Avenir-Medium-09.ttf'),
@@ -31,22 +32,29 @@ export default class SignIn extends React.Component{
     getHandler = key => val => {
         this.setState({ [key]: val })
     }
-    handleSignin = async e => {
+    handleSignin = e => {
         e.preventDefault();
         this.setState({ error: '' });
         try{
-            await signin(this.state.email, this.state.password);
-            localStorage.setItem( auth().currentUser)
+            firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password);
+            // localStorage.setItem( auth().currentUser)
+            this.setState({ 
+                email: '',
+                password: '', })
             this.props.navigation.replace("Ekran początkowy");
+            
         } catch(error) {
             this.setState({ error: error.message });
         }
     }
-    handleSignup = async e => {
+    handleSignup = e => {
         e.preventDefault();
         this.setState({ error: '' });
         try{
-            await signup(this.state.email, this.state.password);
+            signup(this.state.email, this.state.password);
+            this.setState({ 
+                email: '',
+                password: '', })
             this.props.navigation.replace("Ekran początkowy");
         } catch(error) {
             this.setState({ error: error.message });

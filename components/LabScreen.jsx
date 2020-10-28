@@ -52,7 +52,7 @@ export default class LabScreen extends React.Component {
         console.log(this.state);
         const uid = auth().currentUser.uid;
         const data_id = `data-${Date.now()}`
-        db.ref(`lab/${uid}/${data_id}`)
+        db.ref(`lab/${data_id}`)
             .set({
                 date: this.state.date,
                 plec: this.state.plec,
@@ -69,7 +69,8 @@ export default class LabScreen extends React.Component {
                     age: 0,
                     plec: '',
                     oddzial: '',
-                    speed: false, })
+                    speed: false, 
+                })
             });
     }
     render(){

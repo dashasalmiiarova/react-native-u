@@ -22,6 +22,7 @@ export default class DokScreen extends React.Component {
         fontsLoaded: false,
         modalVisible: false,
         date: new Date(),
+        odzial: '',
         age: '',
         plec: '',
         place: '',
@@ -55,9 +56,9 @@ export default class DokScreen extends React.Component {
         console.log(this.state);
         const uid = auth().currentUser.uid;
         const data_id = `data-${Date.now()}`
-        db.ref(`dok/${uid}/${data_id}`)
+        db.ref(`dok/${data_id}`)
             .set({
-                date: this.state.date,
+                date_u: this.state.date.toLocaleString(),
                 plec: this.state.plec,
                 place: this.state.place,
                 hospital: this.state.hospital,
@@ -120,7 +121,7 @@ export default class DokScreen extends React.Component {
                                     onDateChange={(date) => { this.setState({ date: date }) }}
                                     disabled={false}
                                 />
-                                
+                                <TextInput style={styles.input} placeholder='Oddział w szpitalu' value={this.state.odzial} onChangeText={ this.getHandler('odzial') } keyboardType='default' placeholderTextColor="#43425D" />
                                 <TextInput style={styles.input} placeholder='Wiek' value={this.state.age} onChangeText={ this.getHandler('age') } keyboardType='numeric' placeholderTextColor="#43425D" />
                                 <TextInput style={styles.input} placeholder='Plec' value={this.state.plec} onChangeText={ this.getHandler('plec') } keyboardType='default' placeholderTextColor="#43425D" />       
                                 <TextInput style={styles.input} placeholder='Skąd pacjent(miasto, wieś)?' value={this.state.place} onChangeText={ this.getHandler('place') } keyboardType='default' placeholderTextColor="#43425D" />       
@@ -176,7 +177,7 @@ export default class DokScreen extends React.Component {
                                             this.setModalVisible(!modalVisible);
                                             }}
                                         >
-                                            <Text style={styles.textStyle}>Zamknąć</Text>
+                                            <Text style={styles.textStyle}>Zamkni</Text>
                                         </TouchableHighlight>
                                         </View>
                                         </View>

@@ -17,11 +17,12 @@ let customFonts = {
     'Avenir_Book': require('../assets/fonts/Avenir/Avenir-Book-01.ttf'),
 }
 
+let count = 0;
 export default class DokScreen extends React.Component {
     state={
         fontsLoaded: false,
         modalVisible: false,
-        date: new Date(),
+        date_u: new Date(),
         odzial: '',
         age: '',
         plec: '',
@@ -53,12 +54,13 @@ export default class DokScreen extends React.Component {
     }
 
     createData(){
-        console.log(this.state);
-        const uid = auth().currentUser.uid;
-        const data_id = `data-${Date.now()}`
-        db.ref(`dok/${data_id}`)
+        const data_id = this.state.date_u.toLocaleDateString('en-GB').toString()
+        const newDate = data_id.replace(/([0-9]{2})\/([0-9]{2})\/([0-9]{4})/g,'$1-$2-$3');
+        count++;
+        db.ref(`dok/${newDate}/${count}`)
             .set({
-                date_u: this.state.date.toLocaleString(),
+                date_u: this.state.date_u.toLocaleDateString('en-GB'),
+                odzial: this.state.odzial,
                 plec: this.state.plec,
                 place: this.state.place,
                 hospital: this.state.hospital,
@@ -66,14 +68,15 @@ export default class DokScreen extends React.Component {
                 badanieName: this.state.badanieName,
                 diagnoz: this.state.diagnoz,
                 first: this.state.first,
-                spotkanie: this.state.spotkanie
+                spotkanie: this.state.spotkanie,
+                age: this.state.age,
             })
             .then(_ => {
                 //modal
                 this.setModalVisible(true);
 
                 this.setState({
-                    date: new Date(),
+                    date_u: new Date(),
                     age: 0,
                     plec: '',
                     place: '',
@@ -83,14 +86,14 @@ export default class DokScreen extends React.Component {
                     diagnoz: '',
                     first: false,
                     spotkanie: 'Stacjonarie',
+                    odzial: '',
                 })
             });
     }
 
     render(){
         const { modalVisible } = this.state;
-        // const deltaX = useRef(new Animated.Value(0)).current;
-        // const deltaY = useRef(new Animated.Value(0)).current;
+       
         if(this.state.fontsLoaded){
             return (
                 <KeyboardAvoidingView behavior="padding" style={styles.container} ref="scroller" keyboardShouldPersistTaps={true} >
@@ -107,7 +110,7 @@ export default class DokScreen extends React.Component {
                             <View style={styles.contentContainer}>
                                 <Text style={styles.mainText}>Wypełni formularz</Text>
                                 <DatePicker
-                                    defaultDate={ this.state.date }
+                                    defaultDate={ this.state.date_u }
                                     minimumDate={new Date(2020, 1, 1)}
                                     maximumDate={new Date()}
                                     locale={"pl"}
@@ -118,7 +121,7 @@ export default class DokScreen extends React.Component {
                                     // placeHolderText="Wybierz datę"
                                     textStyle={{ color: "#2CD889" }}
                                     placeHolderTextStyle={{ color: "#2CD889" }}
-                                    onDateChange={(date) => { this.setState({ date: date }) }}
+                                    onDateChange={(date) => { this.setState({ date_u: date }) }}
                                     disabled={false}
                                 />
                                 <TextInput style={styles.input} placeholder='Oddział w szpitalu' value={this.state.odzial} onChangeText={ this.getHandler('odzial') } keyboardType='default' placeholderTextColor="#43425D" />

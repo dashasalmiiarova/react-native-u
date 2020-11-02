@@ -11,6 +11,8 @@ import CheckBox from './CheckBox';
 
 import { db, auth } from '../firebase';
 
+let count = 0;
+
 let customFonts = {
     'Avenir_Medium': require('../assets/fonts/Avenir/Avenir-Medium-09.ttf'),
     'Avenir_Book': require('../assets/fonts/Avenir/Avenir-Book-01.ttf'),
@@ -20,7 +22,7 @@ export default class LabScreen extends React.Component {
     state={
         fontsLoaded: false,
         modalVisible: false,
-        date: new Date(),
+        date_u: new Date(),
         age: '',
         plec: '',
         oddzial: '',
@@ -49,12 +51,12 @@ export default class LabScreen extends React.Component {
         this.setState({ [key]: val })
     }
     createData(){
-        console.log(this.state);
-        const uid = auth().currentUser.uid;
-        const data_id = `data-${Date.now()}`
-        db.ref(`lab/${data_id}`)
+        const data_id = this.state.date_u.toLocaleDateString('en-GB').toString()
+        const newDate = data_id.replace(/([0-9]{2})\/([0-9]{2})\/([0-9]{4})/g,'$1-$2-$3');
+        count++;
+        db.ref(`lab/${newDate}/${count}`)
             .set({
-                date: this.state.date,
+                date_u: this.state.date_u.toLocaleDateString('en-GB'),
                 plec: this.state.plec,
                 age: this.state.age,
                 oddzial: this.state.oddzial,
@@ -65,7 +67,7 @@ export default class LabScreen extends React.Component {
                 this.setModalVisible(true);
 
                 this.setState({ 
-                    date: new Date(),
+                    date_u: new Date(),
                     age: 0,
                     plec: '',
                     oddzial: '',

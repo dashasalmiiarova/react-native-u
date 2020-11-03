@@ -7,6 +7,7 @@ import ButtonMain from './ButtonMain';
 import Spinner from './Spinner';
 import { DatePicker } from 'native-base';
 import CheckBox from './CheckBox';
+import { LogBox } from 'react-native';
 // import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { db, auth } from '../firebase';
@@ -27,6 +28,7 @@ export default class LabScreen extends React.Component {
         plec: '',
         oddzial: '',
         speed: false,
+        test: '',
     };
     async _loadFontsAsync(){
         await Font.loadAsync(customFonts);
@@ -37,8 +39,8 @@ export default class LabScreen extends React.Component {
     }
     componentDidMount(){
         this._loadFontsAsync();
-        // LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
-        // LogBox.ignoreAllLogs();//Ignore all log notifications
+        LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+        LogBox.ignoreAllLogs();//Ignore all log notifications
     }
     created() {
         LogBox.ignoreLogs([
@@ -61,6 +63,7 @@ export default class LabScreen extends React.Component {
                 age: this.state.age,
                 oddzial: this.state.oddzial,
                 speed: this.state.speed,
+                test: this.state.test,
             })
             .then(_ => {
                 //modal
@@ -72,6 +75,7 @@ export default class LabScreen extends React.Component {
                     plec: '',
                     oddzial: '',
                     speed: false, 
+                    test: '',
                 })
             });
     }
@@ -83,9 +87,9 @@ export default class LabScreen extends React.Component {
                     <View style={styles.inner}>
                     <Text style={styles.mainText}>Wypełni formularz</Text>
                     <DatePicker
-                        defaultDate={ this.state.date }
+                        defaultDate={ this.state.date_u }
                         minimumDate={new Date(2020, 1, 1)}
-                        maximumDate={new Date()}
+                        maximumDate={this.state.date_u}
                         locale={"pl"}
                         timeZoneOffsetInMinutes={undefined}
                         modalTransparent={false}
@@ -94,12 +98,13 @@ export default class LabScreen extends React.Component {
                         // placeHolderText="Wybierz datę"
                         textStyle={{ color: "#2CD889" }}
                         placeHolderTextStyle={{ color: "#2CD889" }}
-                        onDateChange={(date) => { this.setState({ date: date }) }}
+                        onDateChange={(date) => { this.setState({ date: date_u }) }}
                         disabled={false}
                     />
                     <TextInput style={styles.input} value={this.state.age} onChangeText={ this.getHandler('age') } placeholder='Wiek' keyboardType='numeric' placeholderTextColor="#43425D" />
                     <TextInput style={styles.input} value={this.state.plec} onChangeText={ this.getHandler('plec') } placeholder='Plec' keyboardType='default' placeholderTextColor="#43425D" />       
                     <TextInput style={styles.input} value={this.state.oddzial} onChangeText={ this.getHandler('oddzial') } placeholder='Oddział szpitalu z którego było skierowanie' keyboardType='default' placeholderTextColor="#43425D" />
+                    <TextInput style={styles.input} value={this.state.test} onChangeText={ this.getHandler('test') } placeholder='Jakie badanie zostało przeprowadzone' keyboardType='default' placeholderTextColor="#43425D" />
                     <CheckBox 
                         selected={this.state.speed} 
                         onPress={() => { this.setState({ speed: !this.state.speed })}}

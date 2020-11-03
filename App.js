@@ -54,7 +54,7 @@ export default class App extends React.Component {
   render(){
     return (
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Ekran początkowy" screenOptions={{ headerBackTitle: 'Wstecz' }} >
+        <Stack.Navigator initialRouteName="Ekran logowania" screenOptions={{ headerBackTitle: 'Wstecz' }} >
           <Stack.Screen name="Ekran logowania" component={SignIn} />
           <Stack.Screen name="Ekran początkowy" component={ User } options={{ headerShown: false }} />
           <Stack.Screen name="Laboratorium" component={LabScreen} />

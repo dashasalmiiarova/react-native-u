@@ -44,8 +44,8 @@ export default class DokScreen extends React.Component {
     componentDidMount(){
         this._loadFontsAsync();
         LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
-        // LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
-        // LogBox.ignoreAllLogs();//Ignore all log notifications
+        LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+        LogBox.ignoreAllLogs();//Ignore all log notifications
     }
 
     
